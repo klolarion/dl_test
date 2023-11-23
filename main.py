@@ -41,7 +41,13 @@ class Perceptron():
     def predict(self, x):  # numpy 배열 x에 저장된 표본의 출력 계산
         return np.array([self.activation(np.dot(self.w, x[i]) + self.b) for i in range(len(x))])
 
-    def fit(self, X, y, N, epochs, eta=0.01):
+    def fit(self, X, y, N, epochs, eta=0.01):  # 퍼셉트론 객체 학습
+        # X - 특징
+        # y - numpy 배열
+        # N - 표본의 수
+        # epochs - 반복횟수
+        # eta - 학습률
+
         # 학습표본의 인덱스를 무작위 순서로 섞음
         idx = list(range(N))
         np.random.shuffle(idx)
@@ -50,11 +56,12 @@ class Perceptron():
 
         f = 'Epochs = {:4d}   Loss = {:8.5f}'
         print('w의 초깃값  ', end='')
-        self.printW()
+        self.printW()  # 콘솔에 출력
         for j in range(epochs):
             for i in range(N):
                 # x[i]에 대한 출력 오차 계산
-                delta = self.predict([X[i]])[0] - y[i]
+                delta = self.predict([X[i]])[0] - y[i]  # 레이블과의 오차
+                # 오차값을 사용해 가중치w와 바이어스b를 재설정한다
                 self.w -= eta * delta * X[i]
                 self.b -= eta * delta
             # 학습 과정 출력
@@ -109,19 +116,19 @@ def visualize(net, X, y, multi_class, labels, class_id, colors, xlabel, ylabel, 
     plt.show()
 
 
-nSamples = 150
-nDim = 2
-target = 'versicolor' # setosa versicolor virginica
+nSamples = 150  #데이터 개수
+nDim = 2  # 데이터 차원
+target = 'setosa'  # setosa versicolor virginica
 X_tr, y_tr, labels = prepare_data(target)
 
 p = Perceptron(nDim, activation=step)
 p.fit(X_tr, y_tr, nSamples, epochs=1000, eta=0.01)
 
 visualize(p, X_tr, y_tr,
-          multi_class=False,
-          class_id=labels,
-          labels=[1, 0],
-          colors=['magenta', 'blue'],
-          xlabel='petal length',
-          ylabel='petal width',
-          legend_loc='upper left')
+          multi_class=False,  # 3개 이상의 클래스를 사용하는 경우 true
+          class_id=labels,  # 클래스의 이름으로 출력할 리스트
+          labels=[1, 0],  # 클래스 레이블 리스트
+          colors=['magenta', 'blue'],  # 클래스 색상 리스트
+          xlabel='petal length',  # x축 레이블
+          ylabel='petal width',  # y축 레이블
+          legend_loc='upper left')  # 범례표시위치
