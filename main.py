@@ -14,8 +14,8 @@ def prepare_data(target):
     y_tr = []
     for i in range(150):
         y_tr.append(labels[y[i]] == target)
-        y_tr = np.array(y_tr, dtype=int)
-        return X_tr, y_tr, ['(1) ' + target, '(0) the others']
+    y_tr = np.array(y_tr, dtype=int)
+    return X_tr, y_tr, ['(1) ' + target, '(0) the others']
 
 
 # 활성함수-단위 계단함수
@@ -35,20 +35,17 @@ class Perceptron():
 
     def printW(self):
         for i in range(self.dim):
-            print('   w{} = {:6.3f'.format(i + 1, self.w[i]), end='')
+            print('   w{} = {:6.3f}'.format(i + 1, self.w[i]), end='')
         print('  b = {:6.3f}'.format(self.b))
 
     def predict(self, x):  # numpy 배열 x에 저장된 표본의 출력 계산
-        return np.array([self.activation(np.dot(self.w, x[i]) + self.b)
-                         for i in range(len(x))])
+        return np.array([self.activation(np.dot(self.w, x[i]) + self.b) for i in range(len(x))])
 
     def fit(self, X, y, N, epochs, eta=0.01):
         # 학습표본의 인덱스를 무작위 순서로 섞음
         idx = list(range(N))
         np.random.shuffle(idx)
         X = np.array([X[idx[i]] for i in range(N)])
-        print(idx)
-        print(X)
         y = np.array([y[idx[i]] for i in range(N)])
 
         f = 'Epochs = {:4d}   Loss = {:8.5f}'
@@ -88,7 +85,7 @@ def visualize(net, X, y, multi_class, labels, class_id, colors, xlabel, ylabel, 
         y_hat = net.preidct(X_test)
         y_hat = np.array([np.argmax(y_hat[k]) for k in range(len(y_hat))], dtype=int)
     else:
-        y_hat = (net.preidct(X_test) >= 0.5).astype(int)
+        y_hat = (net.predict(X_test) >= 0.5).astype(int)
         y_hat = y_hat.reshape(len(y_hat))
 
     # 출력할 그래프의 수평/수직 범위 및 각 클래스에 대한 색상 및 범례 설정
@@ -114,7 +111,7 @@ def visualize(net, X, y, multi_class, labels, class_id, colors, xlabel, ylabel, 
 
 nSamples = 150
 nDim = 2
-target = 'setosa'
+target = 'versicolor' # setosa versicolor virginica
 X_tr, y_tr, labels = prepare_data(target)
 
 p = Perceptron(nDim, activation=step)
