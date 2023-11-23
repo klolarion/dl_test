@@ -118,7 +118,7 @@ def visualize(net, X, y, multi_class, labels, class_id, colors, xlabel, ylabel, 
 
 nSamples = 150  #데이터 개수
 nDim = 2  # 데이터 차원
-target = 'setosa'  # setosa versicolor virginica
+target = 'virginica'  # setosa versicolor virginica
 X_tr, y_tr, labels = prepare_data(target)
 
 p = Perceptron(nDim, activation=step)
