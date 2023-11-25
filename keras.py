@@ -4,9 +4,8 @@ import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers, optimizers, losses
+from tensorflow.python import keras
+from tensorflow.python.keras import layers, optimizers, losses
 
 
 def prepare_data():
@@ -72,5 +71,5 @@ bp_model_tf.add(layers.InputLayer(input_shape=(nDim,)))
 bp_model_tf.add(layers.Dense(4, activation='sigmoid'))
 bp_model_tf.add(layers.Dense(nClasses, activation='softmax'))
 
-bp_model_tf.summery()
+bp_model_tf.summary()
 
