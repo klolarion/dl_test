@@ -1,11 +1,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import tensorflow.python.keras.mixed_precision.loss_scale_optimizer
 
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
+
+import tensorflow as tf
+
 from tensorflow.python import keras
-from tensorflow.python.keras import layers, optimizers, losses
+from tensorflow.python.keras import layers, losses, optimizers
+
+
+
 
 
 def prepare_data():
@@ -15,6 +22,7 @@ def prepare_data():
     lbl_str = iris.target_names
     X_tr, X_val, y_tr, y_val = train_test_split(X, y, test_size=0.20)
     return X_tr, y_tr, X_val, y_val, lbl_str
+
 
 def visualize(net, X, y, multi_class, labels, class_id, colors, xlabel, ylabel, legend_loc='lower right'):
     # 데이터의 최소~최대 범위를 0.05 간격의 좌표값으로 나열
@@ -65,11 +73,37 @@ nDim = 2
 nClasses = 3
 X_tr, y_tr, X_val, y_val, labels = prepare_data()
 
-
+# 모델 정의
 bp_model_tf = keras.Sequential()
-bp_model_tf.add(layers.InputLayer(input_shape=(nDim,)))
-bp_model_tf.add(layers.Dense(4, activation='sigmoid'))
-bp_model_tf.add(layers.Dense(nClasses, activation='softmax'))
+bp_model_tf.add(layers.InputLayer(input_shape=(nDim,)))  # 입력층
+bp_model_tf.add(layers.Dense(4, activation='sigmoid'))  # 은닉층
+bp_model_tf.add(layers.Dense(nClasses, activation='softmax'))  # 출력층
 
-bp_model_tf.summary()
+bp_model_tf.summary()  # 모델의 요약정보 출력
 
+
+
+
+# 모델 훈련을 위한 설정
+
+# 신규버전에서 optimizers 패키지가 변경됨
+# tf.python.keras.optimizers.py
+# all_classes = {
+#       'adadelta': adadelta_v2.Adadelta,
+#       'adagrad': adagrad_v2.Adagrad,
+#       'adam': adam_v2.Adam,
+#       'adamax': adamax_v2.Adamax,
+#       'nadam': nadam_v2.Nadam,
+#       'rmsprop': rmsprop_v2.RMSprop,
+#       'sgd': gradient_descent_v2.SGD,
+#       'ftrl': ftrl.Ftrl,
+#       'lossscaleoptimizer': loss_scale_optimizer.LossScaleOptimizer,
+#       # LossScaleOptimizerV1 deserializes into LossScaleOptimizer, as
+#       # LossScaleOptimizerV1 will be removed soon but deserializing it will
+#       # still be supported.
+#       'lossscaleoptimizerv1': loss_scale_optimizer.LossScaleOptimizer,
+#   }
+
+bp_model_tf.compile(optimizer=optimizers.gradient_descent_v2.SGD(0.1, momentum=0.9),
+                    loss=losses.SparseCategoricalCrossentropy(),
+                    metrics=['accuracy'])
