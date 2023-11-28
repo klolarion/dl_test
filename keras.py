@@ -1,18 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import tensorflow.python.keras.mixed_precision.loss_scale_optimizer
 
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
-
-import tensorflow as tf
-
-from tensorflow.python import keras
-from tensorflow.python.keras import layers, losses, optimizers
-
-
-
+from tensorflow import keras
+from keras import layers, optimizers, losses
 
 
 def prepare_data():
@@ -81,29 +74,10 @@ bp_model_tf.add(layers.Dense(nClasses, activation='softmax'))  # 출력층
 
 bp_model_tf.summary()  # 모델의 요약정보 출력
 
-
-
-
 # 모델 훈련을 위한 설정
-
-# 신규버전에서 optimizers 패키지가 변경됨
-# tf.python.keras.optimizers.py
-# all_classes = {
-#       'adadelta': adadelta_v2.Adadelta,
-#       'adagrad': adagrad_v2.Adagrad,
-#       'adam': adam_v2.Adam,
-#       'adamax': adamax_v2.Adamax,
-#       'nadam': nadam_v2.Nadam,
-#       'rmsprop': rmsprop_v2.RMSprop,
-#       'sgd': gradient_descent_v2.SGD,
-#       'ftrl': ftrl.Ftrl,
-#       'lossscaleoptimizer': loss_scale_optimizer.LossScaleOptimizer,
-#       # LossScaleOptimizerV1 deserializes into LossScaleOptimizer, as
-#       # LossScaleOptimizerV1 will be removed soon but deserializing it will
-#       # still be supported.
-#       'lossscaleoptimizerv1': loss_scale_optimizer.LossScaleOptimizer,
-#   }
-
-bp_model_tf.compile(optimizer=optimizers.gradient_descent_v2.SGD(0.1, momentum=0.9),
+bp_model_tf.compile(optimizer=optimizers.SGD(0.1, momentum=0.9),
                     loss=losses.SparseCategoricalCrossentropy(),
                     metrics=['accuracy'])
+
+
+## 현재 파이썬 3.9에서 tensorflow와 keras를 사용하는것이 좋음.
